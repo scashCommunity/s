@@ -33,10 +33,21 @@ jobs:
             libsqlite3-dev libdb++-dev libminiupnpc-dev libnatpmp-dev \
             libqrencode-dev libzmq3-dev
 
-      - name: Fix Qt download URL
+      - name: Fix depends download URLs
         run: |
-          sed -i 's|https://download.qt.io/archive/qt/5.15/\$(\$\(package\)_version)/submodules|https://download.qt.io/archive/qt/5.15/5.15.11/submodules|g' depends/packages/qt.mk
-          grep 'download_path' depends/packages/qt.mk | head -3
+          python3 - <<'PY'
+          p = 'depends/packages/qt.mk'
+          s = open(p, encoding='utf-8').read()
+          assert 'official_releases' in s, 'qt.mk: official_releases not found'
+          s = s.replace('https://download.qt.io/official_releases/', 'https://download.qt.io/archive/')
+          open(p, 'w', encoding='utf-8').write(s)
+          p = 'depends/packages/boost.mk'
+          s = open(p, encoding='utf-8').read()
+          assert 'boostorg.jfrog.io' in s, 'boost.mk: jfrog not found'
+          s = s.replace('https://boostorg.jfrog.io/artifactory/main/release/', 'https://archives.boost.io/release/')
+          open(p, 'w', encoding='utf-8').write(s)
+          PY
+          grep -H 'download_path' depends/packages/qt.mk depends/packages/boost.mk
 
       - name: Cache depends
         uses: actions/cache@v4
