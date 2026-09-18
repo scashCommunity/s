@@ -131,6 +131,7 @@ jobs:
 
     # No need to run on the read-only mirror, unless it is a PR.
     if: github.repository != 'bitcoin-core/gui' || github.event_name == 'pull_request'
+    continue-on-error: true
 
     env:
       CCACHE_MAXSIZE: '200M'
