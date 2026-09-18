@@ -635,6 +635,9 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
 
+        // DNS seed for Scash mainnet (scashs.cn -> 38.147.171.29)
+        vSeeds.emplace_back("scashs.cn");
+
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,0);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,128);
