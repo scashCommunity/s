@@ -33,13 +33,18 @@ jobs:
             libsqlite3-dev libdb++-dev libminiupnpc-dev libnatpmp-dev \
             libqrencode-dev libzmq3-dev
 
+      - name: Fix Qt download URL
+        run: |
+          sed -i 's|https://download.qt.io/archive/qt/5.15/\$(\$\(package\)_version)/submodules|https://download.qt.io/archive/qt/5.15/5.15.11/submodules|g' depends/packages/qt.mk
+          grep 'download_path' depends/packages/qt.mk | head -3
+
       - name: Cache depends
         uses: actions/cache@v4
         with:
           path: |
             depends/built
             depends/sources
-          key: ${{ runner.os }}-depends-${{ github.event.inputs.version }}-${{ hashFiles('depends/packages/*') }}
+          key: ${{ runner.os }}-depends-packages
 
       - name: Build depends
         run: |
